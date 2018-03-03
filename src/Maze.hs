@@ -23,11 +23,13 @@ type Solution = [[Path]]
 type CoordinatedMaze = [Tile]
 type Maze = [[Cell]]
 
-solve :: Maze -> Solution
-solve maze = case findStart maze of 
-    Just s -> formatResult (mazeSize maze) (go s [] [])
-    Nothing -> []
+solve :: Maze -> Maybe Solution
+solve maze = findStart maze >>= findExitPath >>= format
   where 
+    format path = Just (formatResult (mazeSize maze) path)
+    findExitPath startingPoint = case go startingPoint [] [] of
+      [] -> Nothing
+      r@_ -> Just r
     go cursor path visited = case tileAtPoint maze cursor of
       Just (Tile Exit p ) -> p : path
       Just t@(Tile _ p) -> case nextTile maze p visited of 

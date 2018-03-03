@@ -104,21 +104,21 @@ spec = do
 
     describe "solve" $ do
       it "solves the mazes and produces output matrix" $ do
-        solve testMaze3x3  `shouldBe` [
+        solve testMaze3x3  `shouldBe` Just [
             [X, X, O], 
             [O, X, O], 
             [O, X, X]
           ]
         
-        solve testMaze4x4  `shouldBe` [
+        solve testMaze4x4  `shouldBe` Just [
             [O, X, O, O], 
             [O, X, O, O], 
             [O, X, X, O],
             [O, O, X, O]
-          ]  
-      it "returns empty list when there is no valid solution for a maze" $ do
-        solve mazeWithoutSolution `shouldBe` [
-            [O, O, O], 
-            [O, O, O], 
-            [O, O, O]
-          ]
+          ] 
+      
+      it "returns nothing when there is not starting tile" $ do
+        solve mazeWithoutStart `shouldBe` Nothing
+          
+      it "returns nothing when there is no valid solution for a maze" $ do
+        solve mazeWithoutSolution `shouldBe` Nothing
