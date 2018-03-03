@@ -26,10 +26,13 @@ type Maze = [[Cell]]
 solve :: Maze -> Maybe Solution
 solve maze = findStart maze >>= findExitPath >>= format
   where 
+    format :: [Point] -> Maybe Solution
     format path = Just (formatResult (mazeSize maze) path)
+    findExitPath :: Point -> Maybe [Point]
     findExitPath startingPoint = case go startingPoint [] [] of
       [] -> Nothing
       r@_ -> Just r
+    go :: Point -> [Point] -> [Tile] -> [Point]  
     go cursor path visited = case tileAtPoint maze cursor of
       Just (Tile Exit p ) -> p : path
       Just t@(Tile _ p) -> case nextTile maze p visited of 
