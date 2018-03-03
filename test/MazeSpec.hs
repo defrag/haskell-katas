@@ -27,6 +27,12 @@ mazeWithoutStart = [
     [Wall, Empty, Exit]
   ]   
 
+mazeWithoutSolution = [
+    [Start, Wall, Exit], 
+    [Empty, Empty, Wall], 
+    [Empty, Empty, Wall]
+  ]   
+
 spec :: Spec
 spec = do
   describe "mazeSize" $ do
@@ -110,3 +116,9 @@ spec = do
             [O, X, X, O],
             [O, O, X, O]
           ]  
+      it "returns empty list when there is no valid solution for a maze" $ do
+        solve mazeWithoutSolution `shouldBe` [
+            [O, O, O], 
+            [O, O, O], 
+            [O, O, O]
+          ]

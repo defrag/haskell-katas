@@ -16,24 +16,26 @@ data Move =
   | North deriving (Eq, Show)
 
 data Point = Point Int Int deriving (Eq, Show)
-type Maze = [[Cell]]
 data Path = X | O deriving (Eq, Show)
-type Solution = [[Path]]
-type CooridinatedMaze = [Tile]
-
 data Tile = Tile Cell Point deriving (Eq, Show)
+
+type Solution = [[Path]]
+type CoordinatedMaze = [Tile]
+type Maze = [[Cell]]
 
 solve :: Maze -> Solution
 solve maze = case findStart maze of 
     Just s -> formatResult (mazeSize maze) (go s [] [])
     Nothing -> []
   where 
-    go point path visited = case tileAtPoint maze point of
-      (Just (Tile Exit p )) -> p : path
-      (Just t@(Tile _ p)) -> case (nextTile maze p visited) of 
-        (Just (Tile _ np)) -> go np (p : path) (t : visited) 
-        Nothing -> go (head path) (tail path) (t : visited)
-      Nothing -> path
+    go cursor path visited = case tileAtPoint maze cursor of
+      Just (Tile Exit p ) -> p : path
+      Just t@(Tile _ p) -> case nextTile maze p visited of 
+        Just (Tile _ np) -> go np (p : path) (t : visited) 
+        Nothing -> case path of
+          [] -> []
+          (x:xs) -> go x xs (t : visited)
+      Nothing -> []
 
 mazeSize :: Maze -> (Int, Int)
 mazeSize maze = (length maze, length $ head maze)
@@ -68,11 +70,11 @@ tileAtPoint maze point = case tilesFiltered of
 tilePoint :: Tile -> Point
 tilePoint (Tile _ p) = p
 
-toTiles :: Maze -> CooridinatedMaze
+toTiles :: Maze -> CoordinatedMaze
 toTiles maze = do
-    (y, row) <- zip [0..] maze 
-    (x, cell) <- zip [0..] row
-    return $ Tile cell (Point x $ (*) y (-1))
+  (y, row) <- zip [0..] maze 
+  (x, cell) <- zip [0..] row
+  return $ Tile cell (Point x $ (*) y (-1))
 
 nextTile :: Maze -> Point -> [Tile] -> Maybe Tile
 nextTile maze cursor visited = case sequence tiles of
