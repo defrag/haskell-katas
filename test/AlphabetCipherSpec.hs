@@ -12,10 +12,10 @@ spec :: Spec
 spec = do
   describe "buildBoard" $ do
     it "builds the decoding/encoding board" $ do
-      buildBoard !! 0 `shouldBe` Cell (Point 'a' 'a') 'a'
-      buildBoard !! 25 `shouldBe` Cell (Point 'a' 'z') 'z'
-      buildBoard !! 26 `shouldBe` Cell (Point 'b' 'a') 'b'
-      buildBoard !! 51 `shouldBe` Cell (Point 'b' 'z') 'a'
+      buildBoard !! 0 `shouldBe` Cell 'a' 'a' 'a'
+      buildBoard !! 25 `shouldBe` Cell 'a' 'z' 'z'
+      buildBoard !! 26 `shouldBe` Cell 'b' 'a' 'b'
+      buildBoard !! 51 `shouldBe` Cell 'b' 'z' 'a'
   
   describe "encodeChar" $ do
     it "finds a value on intersection of chars on board" $ do
