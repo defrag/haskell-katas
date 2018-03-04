@@ -9,22 +9,21 @@ type Keyword = String
 data Cell = Cell Point Char deriving (Eq, Show)
 data Point = Point Char Char deriving (Eq, Show)
 type Board = [Cell]
+type Lookup = (Board -> Char -> Char -> Char)
 
 encode :: Keyword -> Message -> Message
-encode keyword message = reverse $ go (repeatUntil keyword (length message)) message []
-  where
-    board = buildBoard
-    go k m acc = case k of 
-      [] -> acc
-      (x:sx) -> go (tail k) (tail m) $ (findEncodedValue board (Point (head k) (head m))) : acc
+encode keyword message = execute keyword message encodeChar
 
 decode :: Keyword -> Message -> Message
-decode keyword message = reverse $ go (repeatUntil keyword (length message)) message []
+decode keyword message = execute keyword message decodeChar
+
+execute :: Keyword -> Message -> Lookup -> Message      
+execute keyword message lookup = reverse $ go (repeatUntil keyword (length message)) message []
   where
     board = buildBoard
     go k m acc = case k of 
       [] -> acc
-      (x:sx) -> go (tail k) (tail m) $ (findDecodedValue board (head k) (head m)) : acc
+      (x:sx) -> go (tail k) (tail m) $ (lookup board (head k) (head m)) : acc
 
 repeatUntil :: String -> Int -> String
 repeatUntil source l = go source source l
@@ -33,16 +32,16 @@ repeatUntil source l = go source source l
       | length acc >= l = take l acc
       | otherwise = go source (concat $ replicate 2 acc) l
     
-findEncodedValue :: Board -> Point -> Char
-findEncodedValue board point = head $ map cellValue $ filter (pointed point) board
+encodeChar :: Lookup
+encodeChar board x y = head $ map cellValue $ filter (pointed x y) board
   where
-    pointed :: Point -> Cell -> Bool
-    pointed p (Cell p' _) = p == p'
+    pointed :: Char -> Char -> Cell -> Bool
+    pointed x y (Cell (Point x' y') _) = x == x' && y == y'
     cellValue :: Cell -> Char
     cellValue (Cell _ v) = v
 
-findDecodedValue :: Board -> Char -> Char -> Char
-findDecodedValue board key value = head $ map decodeValue $ filter matches board
+decodeChar :: Lookup
+decodeChar board key value = head $ map decodeValue $ filter matches board
   where
     matches :: Cell -> Bool
     matches (Cell (Point x _) v) = key == x && v == value

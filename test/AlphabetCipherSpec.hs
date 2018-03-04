@@ -17,11 +17,11 @@ spec = do
       buildBoard !! 26 `shouldBe` Cell (Point 'b' 'a') 'b'
       buildBoard !! 51 `shouldBe` Cell (Point 'b' 'z') 'a'
   
-  describe "findEncodedValue" $ do
+  describe "encodeChar" $ do
     it "finds a value on intersection of chars on board" $ do
-      findEncodedValue buildBoard (Point 'v' 'm') `shouldBe` 'h'
-      findEncodedValue buildBoard (Point 'i' 'e') `shouldBe` 'm'
-      findEncodedValue buildBoard (Point 'g' 'e') `shouldBe` 'k'
+      encodeChar buildBoard 'v' 'm' `shouldBe` 'h'
+      encodeChar buildBoard 'i' 'e' `shouldBe` 'm'
+      encodeChar buildBoard 'g' 'e' `shouldBe` 'k'
     
   describe "repeatUntil" $ do    
     it "repeats given string until it matches the given length" $ do
@@ -35,9 +35,9 @@ spec = do
       encode "vigilance" "meetmeontuesdayeveningatseven" `shouldBe` "hmkbxebpxpmyllyrxiiqtoltfgzzv"
       encode "scones" "meetmebythetree"  `shouldBe` "egsgqwtahuiljgs"
   
-  describe "findEncodedValue" $ do
-    it "finds a value on intersection of chars on board" $ do
-      findDecodedValue buildBoard 'v' 'h' `shouldBe` 'm'
+  describe "decodeChar" $ do
+    it "decods a char looking at x and value given corresponding to y" $ do
+      decodeChar buildBoard 'v' 'h' `shouldBe` 'm'
 
   describe "decode" $ do
     it "decodes a message" $ do
