@@ -1,6 +1,5 @@
 module Bowling where
 
-type Pins = Int
 data Game = Game {
   rolls :: [Int]
   } deriving (Eq, Show)
